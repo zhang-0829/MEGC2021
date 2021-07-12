@@ -1,0 +1,61 @@
+{
+    "name": "CASME/Test",
+    "n_gpu": 2,
+
+    "arch": {
+        "type": "CNNRNN",
+        "args": {
+            "backbone": "EfficientFace",
+            "pretrained_path": "/data5/sunlicai/Code/EfficientFace/checkpoint/[06-24]-[14-33]-model_best.pth.tar",
+            "embedding_size": 128,
+            "num_layers": 1,
+            "bidirectional": false,
+            "pooling": "max",
+            "dropout": 0
+        }
+    },
+    "data_loader": {
+        "type": "DataLoader",
+        "args":{
+            "dataset_name": "CASME",
+            "root_dir": "/data5/sunlicai/Dataset/MEGC/2021/CAS(ME)2_longVideoFaceCropped",
+            "neg_factor": 2,
+            "clip_len": 16,
+            "stride": 1,
+            "transform_type": "sc",
+            "batch_size": 32,
+            "num_workers": 8
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.001,
+            "weight_decay": 0,
+            "amsgrad": true
+        }
+    },
+    "loss": "bce_loss",
+    "metrics": [
+        "accuracy", "precision", "recall", "f1", "conf_mat"
+    ],
+    "lr_scheduler": {
+        "type": "MultiStepLR",
+        "args": {
+            "milestones": [80, 150],
+            "gamma": 0.1
+        }
+    },
+    "trainer": {
+        "epochs": 200,
+
+        "save_dir": "saved/",
+        "save_period": 10,
+        "verbosity": 2,
+        
+        "monitor": "min val_loss",
+        "early_stop": 50,
+
+        "tensorboard": true
+    }
+}
